@@ -3,10 +3,14 @@ import { PrismaService } from './prisma.service';
 import { RegisterDto } from './register.dto';
 import * as bcrypt from 'bcrypt';
 import { LoginDTO } from './login.dto';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AppService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private jwtService: JwtService,
+  ) {}
 
   async login(data: LoginDTO) {
     try {
@@ -14,23 +18,18 @@ export class AppService {
         where: { email: data.email },
       });
 
-      if (!user) {
-        throw new Error('User not found');
+      if (!user || !(await bcrypt.compare(data.password, user.password))) {
+        throw new Error('Email or Password is incorrect');
       }
 
-      const isPasswordValid = await bcrypt.compare(
-        data.password,
-        user.password,
-      );
+      // Payload used to generate JWT token
+      const payload = { sub: user.id, email: user.email };
 
-      if (!isPasswordValid) {
-        throw new Error('Invalid password');
-      }
-
-      const { password, ...result } = user;
+      const { password, ...userWithoutPassword } = user;
       return {
         message: 'Login Successful',
-        user: result,
+        access_token: await this.jwtService.signAsync(payload),
+        user: userWithoutPassword,
       };
     } catch (error) {
       console.error('ERROR:', error);
