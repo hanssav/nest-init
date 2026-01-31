@@ -12,6 +12,13 @@ export class AppService {
     private jwtService: JwtService,
   ) {}
 
+  async getFullProfile(id: number) {
+    return this.prisma.user.findUnique({
+      where: { id },
+      select: { id: true, name: true, email: true },
+    });
+  }
+
   async login(data: LoginDTO) {
     try {
       const user = await this.prisma.user.findUnique({
