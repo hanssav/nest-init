@@ -6,7 +6,6 @@ describe('AppController', () => {
   let appController: AppController;
   let appService: AppService;
 
-  // Mock data untuk keperluan testing
   const mockUser = { name: 'John Doe', email: 'john@example.com' };
   const mockUserList = [{ name: 'John Doe', email: 'john@example.com' }];
 
@@ -37,7 +36,11 @@ describe('AppController', () => {
 
   describe('create', () => {
     it('should create a new user', async () => {
-      const dto = { name: 'John Doe', email: 'john@example.com' };
+      const dto = {
+        name: 'John Doe',
+        email: 'john@example.com',
+        password: 'password123',
+      };
       expect(await appController.create(dto)).toBe(mockUser);
       expect(appService.createUser).toHaveBeenCalledWith(dto);
     });
