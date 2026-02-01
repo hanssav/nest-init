@@ -6,14 +6,14 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
-import { AppService } from './app.service';
-import { RegisterDto } from './register.dto';
-import { LoginDTO } from './login.dto';
+import { AuthService } from './auth.service';
+import { RegisterDto } from './dto/register.dto';
+import { LoginDTO } from './dto/login.dto';
 import { AuthGuard } from './auth.guard';
 
-@Controller()
-export class AppController {
-  constructor(private readonly appService: AppService) {}
+@Controller('auth')
+export class AuthController {
+  constructor(private readonly appService: AuthService) {}
 
   @Post('login')
   async login(@Body() loginData: LoginDTO) {

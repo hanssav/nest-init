@@ -1,20 +1,20 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { AuthService } from './auth.service';
+import { AuthController } from './auth.controller';
 
-describe('AppController', () => {
-  let appController: AppController;
-  let appService: AppService;
+describe('Auth Controller', () => {
+  let authController: AuthController;
+  let authService: AuthService;
 
   const mockUser = { name: 'John Doe', email: 'john@example.com' };
   const mockUserList = [{ name: 'John Doe', email: 'john@example.com' }];
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
-      controllers: [AppController],
+      controllers: [AuthController],
       providers: [
         {
-          provide: AppService,
+          provide: AuthService,
           useValue: {
             createUser: jest.fn().mockResolvedValue(mockUser),
             getUsers: jest.fn().mockResolvedValue(mockUserList),
@@ -23,14 +23,14 @@ describe('AppController', () => {
       ],
     }).compile();
 
-    appController = app.get<AppController>(AppController);
-    appService = app.get<AppService>(AppService);
+    authController = app.get<AuthController>(AuthController);
+    authService = app.get<AuthService>(AuthService);
   });
 
   describe('findAll', () => {
     it('should return an array of users', async () => {
-      expect(await appController.findAll()).toBe(mockUserList);
-      expect(appService.getUsers).toHaveBeenCalled();
+      expect(await authController.findAll()).toBe(mockUserList);
+      expect(authService.getUsers).toHaveBeenCalled();
     });
   });
 
@@ -41,8 +41,8 @@ describe('AppController', () => {
         email: 'john@example.com',
         password: 'password123',
       };
-      expect(await appController.create(dto)).toBe(mockUser);
-      expect(appService.createUser).toHaveBeenCalledWith(dto);
+      expect(await authController.create(dto)).toBe(mockUser);
+      expect(authService.createUser).toHaveBeenCalledWith(dto);
     });
   });
 });

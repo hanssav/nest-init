@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { PrismaService } from './prisma.service';
+import { AuthController } from './auth/auth.controller';
+import { AuthService } from './auth/auth.service';
 import { JwtModule } from '@nestjs/jwt';
+import { UserModule } from './user/user.module';
+import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
   imports: [
@@ -11,8 +12,10 @@ import { JwtModule } from '@nestjs/jwt';
       secret: 'RAHASIA_NEGARA_123', // ideally should be in .env
       signOptions: { expiresIn: '1d' },
     }),
+    UserModule,
+    PrismaModule,
   ],
-  controllers: [AppController],
-  providers: [AppService, PrismaService],
+  controllers: [AuthController],
+  providers: [AuthService],
 })
 export class AppModule {}
