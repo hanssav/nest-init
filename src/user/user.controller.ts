@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   ForbiddenException,
+  Get,
   Param,
   ParseIntPipe,
   Put,
@@ -27,5 +28,23 @@ export class UserController {
       throw new ForbiddenException('You can only update your own profile');
     }
     return this.userService.updateUser(+id, updateUserDto);
+  }
+
+  @Get('users')
+  async findAll() {
+    return this.userService.getUsers();
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('profile')
+  async getProfile(@Request() req) {
+    const userId = req.user.sub;
+
+    const user = await this.userService.findOne(userId);
+
+    return {
+      message: 'Profile data fetched successfully',
+      user,
+    };
   }
 }

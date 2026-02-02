@@ -27,13 +27,6 @@ describe('Auth Controller', () => {
     authService = app.get<AuthService>(AuthService);
   });
 
-  describe('findAll', () => {
-    it('should return an array of users', async () => {
-      expect(await authController.findAll()).toBe(mockUserList);
-      expect(authService.getUsers).toHaveBeenCalled();
-    });
-  });
-
   describe('create', () => {
     it('should create a new user', async () => {
       const dto = {

@@ -50,4 +50,13 @@ export class UserService {
       },
     });
   }
+
+  async getUsers() {
+    try {
+      return await this.prisma.user.findMany();
+    } catch (error) {
+      console.error('ERROR:', error);
+      throw error;
+    }
+  }
 }
